@@ -1,0 +1,41 @@
+---
+swagger: "2.0"
+info:
+  title: basic-api
+  version: 1.0.0
+paths:
+  /person:
+    get:
+      operationId: getPerson
+      parameters:
+      - name: email
+        in: query
+        required: true
+        type: string
+      responses:
+        200:
+          description: Response ok
+          schema:
+            $ref: '#/definitions/Person'
+definitions:
+  Person:
+    title: Root Type for Person
+    description: The root of the Person type's schema.
+    type: object
+    properties:
+      firstName:
+        type: string
+      lastName:
+        type: string
+      email:
+        type: string
+      age:
+        format: int32
+        type: integer
+    example: |-
+      {
+          "firstName": "John",
+          "lastName": "Doe",
+          "email": "john@mail.com",
+          "age": 21
+      }
