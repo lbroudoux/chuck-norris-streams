@@ -1,4 +1,4 @@
-package nextgen.Processor;
+package nextgen.processor;
 
 
 import java.util.Optional;

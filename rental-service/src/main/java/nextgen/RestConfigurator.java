@@ -20,6 +20,9 @@ public class RestConfigurator extends RouteBuilder {
 		.contextPath(environment.getProperty("camelrest.contextPath"))
 		.port(environment.getProperty("camelrest.port"))
 		.apiContextPath("/api-docs")
+		.apiProperty("cors", "true")
+		.apiProperty("api.title", environment.getProperty("camel.springboot.name"))
+		.apiProperty("api.version", environment.getProperty("camelrest.apiversion"))
 		.host(environment.getProperty("camelrest.host"))
 		.dataFormatProperty("prettyPrint", "true");
 		

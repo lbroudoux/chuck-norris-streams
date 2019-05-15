@@ -1,4 +1,4 @@
-package nextgen.Processor;
+package nextgen.processor;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
