@@ -1,26 +1,44 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-    xmlns:context="http://www.springframework.org/schema/context"
-    xmlns:cxf="http://camel.apache.org/schema/cxf"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd        http://camel.apache.org/schema/spring http://camel.apache.org/schema/spring/camel-spring.xsd        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd        http://camel.apache.org/schema/cxf http://camel.apache.org/schema/cxf/camel-cxf.xsd        ">
-    <camelContext id="rental-service" xmlns="http://camel.apache.org/schema/spring">
-        <rest id="rest-a185649e-83db-48d0-a767-516711845001" path="/restsvc">
-            <get id="get-38879b06-9b02-4a54-b380-1bd672de14a0" uri="/ping">
-                <route>
-                    <setBody>
-                        <method ref="myTransformer"/>
-                    </setBody>
-                </route>
-            </get>
-        </rest>
-        <route id="http-receiver">
-            <from id="http-receiver-starter" uri="servlet://ping"/>
-            <setHeader headerName="Content-Type" id="_setHeader1">
-                <constant>application/json</constant>
-            </setHeader>
-            <setBody id="_setBody1">
-                <constant>{"msg" : "HELLO"}</constant>
-            </setBody>
-        </route>
-    </camelContext>
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:cxf="http://camel.apache.org/schema/cxf"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd        http://camel.apache.org/schema/spring http://camel.apache.org/schema/spring/camel-spring.xsd        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd        http://camel.apache.org/schema/cxf http://camel.apache.org/schema/cxf/camel-cxf.xsd        ">
+	<camelContext id="rental-service"
+		xmlns="http://camel.apache.org/schema/spring">
+		<rest id="chuckrental" path="/chuckrental">
+			<post id="rental-post" uri="/save"
+				type="nextgen.apimodel.RentalEdit" outType="nextgen.model.Rental">
+				<route>
+					<transform>
+						<method ref="rentalCRUD" method="save" />
+					</transform>
+				</route>
+			</post>
+			<get id="rental-find-all" uri="/findAll">
+				<route>
+					<transform>
+						<method ref="rentalCRUD" method="findAll" />
+					</transform>
+				</route>
+			</get>
+			<get id="rental-find-by-id" uri="/findById/{id}" outType="nextgen.model.Rental">
+				<route>
+					<log message="${header.id}" />
+					<transform>
+						<method ref="rentalCRUD" method="findById" />
+					</transform>
+				</route>
+			</get>
+		</rest>
+		<route id="http-receiver">
+			<from id="http-receiver-starter" uri="servlet://ping" />
+			<setHeader headerName="Content-Type" id="_setHeader1">
+				<constant>application/json</constant>
+			</setHeader>
+			<setBody id="_setBody1">
+				<constant>{"msg" : "HELLO"}</constant>
+			</setBody>
+		</route>
+	</camelContext>
 </beans>

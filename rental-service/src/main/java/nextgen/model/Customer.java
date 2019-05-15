@@ -6,6 +6,9 @@ import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 @Entity
 public class Customer extends AbstractBaseEntity {
 
@@ -19,6 +22,7 @@ public class Customer extends AbstractBaseEntity {
 	private String twitterHandle;
 	
 	@OneToMany(mappedBy="customer")
+	@JsonBackReference
 	private Set<Rental> rentals;
 
 	public String getFirstName() {
@@ -45,6 +49,15 @@ public class Customer extends AbstractBaseEntity {
 		this.twitterHandle = twitterHandle;
 	}
 
+	public Set<Rental> getRentals() {
+		return rentals;
+	}
+
+	public void setRentals(Set<Rental> rentals) {
+		this.rentals = rentals;
+	}
+
+	
 	
 	
 }

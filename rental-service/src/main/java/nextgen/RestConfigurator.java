@@ -22,6 +22,7 @@ public class RestConfigurator extends RouteBuilder {
 		.apiContextPath("/api-docs")
 		.host(environment.getProperty("camelrest.host"))
 		.dataFormatProperty("prettyPrint", "true");
+		
 	}
 
 

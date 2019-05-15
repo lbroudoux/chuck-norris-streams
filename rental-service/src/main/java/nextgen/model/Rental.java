@@ -3,7 +3,11 @@ package nextgen.model;
 import java.util.Date;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.ManyToOne;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
 public class Rental extends AbstractBaseEntity {
@@ -18,9 +22,11 @@ public class Rental extends AbstractBaseEntity {
 	private Integer rentalDuration;
 	
 	@ManyToOne
+	@JsonManagedReference
 	private Movie movie;
 	
 	@ManyToOne
+	@JsonManagedReference
 	private Customer customer;
 
 	public Date getStartDate() {
