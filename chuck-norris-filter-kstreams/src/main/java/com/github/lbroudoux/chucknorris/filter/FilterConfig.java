@@ -16,7 +16,7 @@ public class FilterConfig {
     private final String bootstrapServers;
     private final String rentalsSourceTopic;
     private final String moviesSourceTopic;
-    private final String usersSourceTopic;
+    private final String customersSourceTopic;
     private final String targetTopic;
     private final String trustStorePassword;
     private final String trustStorePath;
@@ -25,11 +25,11 @@ public class FilterConfig {
     private final String username;
     private final String password;
 
-    public FilterConfig(String bootstrapServers, String rentalsSourceTopic, String moviesSourceTopic, String usersSourceTopic, String targetTopic, String trustStorePassword, String trustStorePath, String keyStorePassword, String keyStorePath, String username, String password) {
+    public FilterConfig(String bootstrapServers, String rentalsSourceTopic, String moviesSourceTopic, String customersSourceTopic, String targetTopic, String trustStorePassword, String trustStorePath, String keyStorePassword, String keyStorePath, String username, String password) {
         this.bootstrapServers = bootstrapServers;
         this.rentalsSourceTopic = rentalsSourceTopic;
         this.moviesSourceTopic = moviesSourceTopic;
-        this.usersSourceTopic = usersSourceTopic;
+        this.customersSourceTopic = customersSourceTopic;
         this.targetTopic = targetTopic;
         this.trustStorePassword = trustStorePassword;
         this.trustStorePath = trustStorePath;
@@ -42,8 +42,8 @@ public class FilterConfig {
     public static FilterConfig fromEnv() {
         String bootstrapServers = System.getenv("BOOTSTRAP_SERVERS");
         String rentalsSourceTopic = System.getenv("RENTALS_SOURCE_TOPIC");
-        String moviesSourceTopic = System.getenv("FILMS_SOURCE_TOPIC");
-        String usersSourceTopic = System.getenv("USERS_SOURCE_TOPIC");
+        String moviesSourceTopic = System.getenv("MOVIES_SOURCE_TOPIC");
+        String customersSourceTopic = System.getenv("CUSTOMERS_SOURCE_TOPIC");
         String targetTopic = System.getenv("TARGET_TOPIC");
         String trustStorePassword = System.getenv("TRUSTSTORE_PASSWORD") == null ? null : System.getenv("TRUSTSTORE_PASSWORD");
         String trustStorePath = System.getenv("TRUSTSTORE_PATH") == null ? null : System.getenv("TRUSTSTORE_PATH");
@@ -52,7 +52,10 @@ public class FilterConfig {
         String username = System.getenv("USERNAME") == null ? null : System.getenv("USERNAME");
         String password = System.getenv("PASSWORD") == null ? null : System.getenv("PASSWORD");
 
-        return new FilterConfig(bootstrapServers, rentalsSourceTopic, moviesSourceTopic, usersSourceTopic, targetTopic, trustStorePassword, trustStorePath, keyStorePassword, keyStorePath, username, password);
+        //return new FilterConfig(bootstrapServers, rentalsSourceTopic, moviesSourceTopic, customersSourceTopic, targetTopic, trustStorePassword, trustStorePath, keyStorePassword, keyStorePath, username, password);
+
+        return new FilterConfig("localhost:9092", "rental.rentals", "rental.movies",
+              "rental.customers", "rental.chucknorris", trustStorePassword, trustStorePath, keyStorePassword, keyStorePath, username, password);
     }
 
     public String getBootstrapServers() {
@@ -64,8 +67,8 @@ public class FilterConfig {
     public String getMoviesTopic() {
         return moviesSourceTopic;
     }
-    public String getUsersTopic() {
-        return usersSourceTopic;
+    public String getCustomersTopic() {
+        return customersSourceTopic;
     }
     public String getTargetTopic() {
         return targetTopic;

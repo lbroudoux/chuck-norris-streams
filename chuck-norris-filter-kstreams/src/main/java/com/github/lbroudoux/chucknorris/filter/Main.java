@@ -34,7 +34,7 @@ public class Main {
 
       // Create Tables for reference data (we only want latest status).
       KTable<DefaultId, Customer> usersTable =
-            builder.table(config.getUsersTopic(), Consumed.with(defaultIdSerde, userSerde));
+            builder.table(config.getCustomersTopic(), Consumed.with(defaultIdSerde, userSerde));
       KTable<DefaultId, Movie> moviesTable =
             builder.table(config.getMoviesTopic(), Consumed.with(defaultIdSerde, movieSerde));
 

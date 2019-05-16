@@ -12,13 +12,14 @@
     <description>Chuck Norris location filter using KafkaStreams</description>
 
     <properties>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-		<java.version>1.8</java.version>
+		    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+		    <java.version>1.8</java.version>
         <kafka.version>2.1.1</kafka.version>
         <mvn.compiler.version>3.5.1</mvn.compiler.version>
+        <mvn.shade.version>3.1.0</mvn.shade.version>
         <mvn.dependency.version>3.0.2</mvn.dependency.version>
-	</properties>
+	  </properties>
 
     <dependencies>
         <dependency>
@@ -44,8 +45,31 @@
                     <target>${java.version}</target>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>${mvn.shade.version}</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                        <configuration>
+                            <finalName>chuck-norris-filter-kstreams</finalName>
+                            <transformers>
+                                <transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer"/>
+                                <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                                    <mainClass>com.github.lbroudoux.chucknorris.filter.Main</mainClass>
+                                </transformer>
+                            </transformers>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
-	<pluginManagement>
+
+	      <pluginManagement>
             <plugins>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
