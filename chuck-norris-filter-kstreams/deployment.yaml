@@ -1,0 +1,27 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  labels:
+    app: chuck-norris-streams-filter
+  name: chuck-norris-streams-filter
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: chuck-norris-filter
+    spec:
+      containers:
+      - name: chuck-norris-filter
+        image: quay.io/lbroudoux/chuck-norris-filter:latest
+        env:
+        - name: BOOTSTRAP_SERVERS
+          value: my-cluster-kafka-bootstrap.amq-streams.svc.cluster.local:9092
+        - name: MOVIES_SOURCE_TOPIC
+          value: rental.movies
+        - name: CUSTOMERS_SOURCE_TOPIC
+          value: rental.customers
+        - name: RENTALS_SOURCE_TOPIC
+          value: rental.customers
+        - name: TARGET_TOPIC
+          value: rental-chuck-norris
