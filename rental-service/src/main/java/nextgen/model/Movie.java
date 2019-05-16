@@ -6,6 +6,9 @@ import java.util.Set;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 @Entity
 public class Movie extends AbstractBaseEntity {
 
@@ -19,6 +22,7 @@ public class Movie extends AbstractBaseEntity {
 	private String mainActor;
 	
 	@OneToMany(mappedBy="movie")
+	@JsonBackReference
 	private Set<Rental> rentals;
 	
 	

@@ -4,12 +4,28 @@
     xmlns:cxf="http://camel.apache.org/schema/cxf"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd        http://camel.apache.org/schema/spring http://camel.apache.org/schema/spring/camel-spring.xsd        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd        http://camel.apache.org/schema/cxf http://camel.apache.org/schema/cxf/camel-cxf.xsd        ">
     <camelContext id="rental-service" xmlns="http://camel.apache.org/schema/spring">
-        <rest id="rest-a185649e-83db-48d0-a767-516711845001" path="/restsvc">
-            <get id="get-38879b06-9b02-4a54-b380-1bd672de14a0" uri="/ping">
+        <rest id="chuckrental" path="/chuckrental">
+            <post id="rental-post" outType="nextgen.model.Rental"
+                type="nextgen.apimodel.RentalEdit" uri="/save">
                 <route>
-                    <setBody>
-                        <method ref="myTransformer"/>
-                    </setBody>
+                    <transform>
+                        <method method="save" ref="rentalCRUD"/>
+                    </transform>
+                </route>
+            </post>
+            <get id="rental-find-all" uri="/findAll">
+                <route>
+                    <transform>
+                        <method method="findAll" ref="rentalCRUD"/>
+                    </transform>
+                </route>
+            </get>
+            <get id="rental-find-by-id" outType="nextgen.model.Rental" uri="/findById/{id}">
+                <route>
+                    <log message="${header.id}"/>
+                    <transform>
+                        <method method="findById" ref="rentalCRUD"/>
+                    </transform>
                 </route>
             </get>
         </rest>
