@@ -1,0 +1,72 @@
+---
+openapi: 3.0.2
+info:
+  title: Chuck Norris facts API
+  version: 1.0.0
+paths:
+  /api/get:
+    get:
+      summary: Get Chuck Norris facts
+      operationId: GetFacts
+      parameters:
+      - name: data
+        in: query
+        description: Filter params
+        required: false
+        schema:
+          type: string
+      responses:
+        200:
+          description: List of requested facts
+          content:
+            text/html:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Fact'
+              examples:
+                top_facts:
+                  value:
+                  - id: "1"
+                    fact: Chuck Norris a d&eacute;j&agrave; compt&eacute; jusqu&#039;&agrave;
+                      l&#039;infini. Deux fois.
+                    date: "1373297343"
+                    vote: "189404"
+                    points: "866902"
+                  - id: "9355"
+                    fact: Google, c&#039;est le seul endroit o&ugrave; tu peux taper
+                      Chuck Norris...
+                    date: "1373297340"
+                    vote: "136456"
+                    points: "607433"
+                  - id: "2"
+                    fact: Certaines personnes portent un pyjama Superman. Superman
+                      porte un pyjama Chuck Norris.
+                    date: "1373297346"
+                    vote: "128337"
+                    points: "551207"
+components:
+  schemas:
+    Fact:
+      title: Root Type for Fact
+      description: The root of the Fact type's schema.
+      type: object
+      properties:
+        id:
+          type: string
+        fact:
+          type: string
+        date:
+          type: string
+        vote:
+          type: string
+        points:
+          type: string
+      example: |-
+        {
+            "id": "106",
+            "fact": "Chuck Norris peut gagner une partie de puissance 4 en trois coups.",
+            "date": "1373297368",
+            "vote": "107246",
+            "points": "461431"
+         }
