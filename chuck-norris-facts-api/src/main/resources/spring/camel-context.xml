@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context" xmlns:cxf="http://camel.apache.org/schema/cxf" xsi:schemaLocation="
+       http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://camel.apache.org/schema/spring http://camel.apache.org/schema/spring/camel-spring.xsd
+       http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+       http://camel.apache.org/schema/cxf http://camel.apache.org/schema/cxf/camel-cxf.xsd
+       ">
+    <camelContext id="chuck-norris-facts-api" xmlns="http://camel.apache.org/schema/spring">
+        <rest path="/restsvc">
+
+            <get uri="/fact">
+                <route>
+                    <transform>
+                        <method ref="myTransformer" method="content" />
+                    </transform>
+                    <unmarshal>
+                        <json library="Jackson" useList="true" />
+                    </unmarshal>
+                    <setHeader headerName="randomFactNb">
+                        <simple>random(0,25)</simple>
+                    </setHeader>
+                    <setBody>
+                        <simple>${body[${header.randomFactNb}]}</simple>
+                    </setBody>
+                </route>
+            </get>
+        </rest>
+        <route id="http-receiver">
+            <from id="http-receiver-starter" uri="servlet://ping" />
+            <setHeader headerName="Content-Type">
+                <constant>application/json</constant>
+            </setHeader>
+            <setBody>
+                <constant>{"msg" : "HELLO"}</constant>
+            </setBody>
+        </route>
+    </camelContext>
+</beans>

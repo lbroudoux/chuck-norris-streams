@@ -1,0 +1,10 @@
+**/target/
+**/.project
+**/.settings
+**/.classpath
+**/*.jar
+**/*.log
+**/.vscode
+**/*.iml
+**/.idea
+**/log-camel-lsp.out
