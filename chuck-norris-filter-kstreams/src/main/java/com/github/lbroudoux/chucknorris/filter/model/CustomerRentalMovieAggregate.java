@@ -24,6 +24,15 @@ public class CustomerRentalMovieAggregate {
          @JsonProperty("movie") Movie movie) {
       this.rental = rental;
       this.movie = movie;
+      if (movie != null && rental != null) {
+         System.err.println("Building new CustomerRentalMovieAggregate with " + movie.toString() + " and " + rental.toString());
+      }
+      if (movie == null) {
+         System.err.println("Got null movie...");
+      }
+      if (rental == null) {
+         System.err.println("Got null rental...");
+      }
    }
 
    public Movie getMovie() {

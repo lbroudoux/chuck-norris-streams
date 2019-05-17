@@ -18,10 +18,10 @@ spec:
         - name: BOOTSTRAP_SERVERS
           value: my-cluster-kafka-bootstrap.amq-streams.svc.cluster.local:9092
         - name: MOVIES_SOURCE_TOPIC
-          value: rental.movies
+          value: remysqldb.movie
         - name: CUSTOMERS_SOURCE_TOPIC
-          value: rental.customers
+          value: mysqldb.customer
         - name: RENTALS_SOURCE_TOPIC
-          value: rental.customers
+          value: mysqldb.customer
         - name: TARGET_TOPIC
           value: rental-chuck-norris

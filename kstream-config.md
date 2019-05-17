@@ -45,7 +45,7 @@ $ docker push quay.io/lbroudoux/chuck-norris-filter:latest
 
 ### Deploy the Kafka Streams application
 
-From the `chuck-norris-rental` OpenShift project (you need to adapt file before with your own image name):
+From the `chuck-movie-rental` OpenShift project (you need to adapt file before with your own image name):
 
 ```
 $ oc apply -f deployment -n chuck-norris-rental

@@ -2,6 +2,7 @@ package com.github.lbroudoux.chucknorris.filter;
 
 import org.apache.kafka.common.serialization.Serde;
 import org.apache.kafka.common.serialization.Serdes;
+import org.apache.kafka.common.utils.Bytes;
 import org.apache.kafka.streams.KafkaStreams;
 import org.apache.kafka.streams.KeyValue;
 import org.apache.kafka.streams.StreamsBuilder;
@@ -9,6 +10,7 @@ import org.apache.kafka.streams.kstream.*;
 
 import com.github.lbroudoux.chucknorris.filter.model.*;
 import com.github.lbroudoux.chucknorris.filter.serdes.SerdeFactory;
+import org.apache.kafka.streams.state.KeyValueStore;
 
 import java.util.Properties;
 
@@ -33,38 +35,40 @@ public class Main {
       StreamsBuilder builder = new StreamsBuilder();
 
       // Create Tables for reference data (we only want latest status).
-      KTable<DefaultId, Customer> usersTable =
-            builder.table(config.getCustomersTopic(), Consumed.with(defaultIdSerde, userSerde));
-      KTable<DefaultId, Movie> moviesTable =
-            builder.table(config.getMoviesTopic(), Consumed.with(defaultIdSerde, movieSerde));
+      KStream<Integer, Customer> usersStream = builder.stream(config.getCustomersTopic(),
+            Consumed.with(defaultIdSerde, userSerde)).map((key, value) -> KeyValue.pair(value.getId(), value));
+      KStream<Integer, Movie> moviesStream = builder.stream(config.getMoviesTopic(),
+            Consumed.with(defaultIdSerde, movieSerde)).map((key, value) -> KeyValue.pair(value.getId(), value));
 
 
       // Deal with Integer as key so re-aggregate the tables.
-      KTable<Integer, Customer> usersTableInt = usersTable.groupBy((key, customer) -> KeyValue.pair(customer.getId(), customer))
+      KTable<Integer, Customer> usersTableInt = usersStream.groupByKey()
             .aggregate(
-                  () -> null,  // Initiate the aggregate value
-                  (userId, customer, aggValue) -> customer,   // adder (doing nothing, just passing the user through as the value)
-                  (userId, customer, aggValue) -> customer    // subtractor (doing nothing, just passing the user through as the value)
+               () -> null,
+               (userId, customer, aggValue) -> customer,
+               Materialized.<Integer, Customer, KeyValueStore<Bytes, byte[]>>as("aggregated-customers-store")
+                     .withKeySerde(Serdes.Integer())
+                     .withValueSerde(userSerde)
             );
-      KTable<Integer, Movie> moviesTableInt = moviesTable.groupBy((key, movie) -> KeyValue.pair(movie.getId(), movie))
+      KTable<Integer, Movie> moviesTableInt = moviesStream.groupByKey()
             .aggregate(
-                  () -> null,  // Initiate the aggregate value
-                  (movieId, movie, aggValue) -> movie,   // adder (doing nothing, just passing the movie through as the value)
-                  (movieId, movie, aggValue) -> movie    // subtractor (doing nothing, just passing the movie through as the value)
+                  () -> null,
+                  (userId, movie, aggValue) -> movie,
+                  Materialized.<Integer, Movie, KeyValueStore<Bytes, byte[]>>as("aggregated-movies-store")
+                        .withKeySerde(Serdes.Integer())
+                        .withValueSerde(movieSerde)
             );
 
       // Create Stream for rental: we are looking at each changes.
       KStream<DefaultId, Rental> rentalsStream = builder.stream(config.getRentalsTopic(), Consumed.with(defaultIdSerde, rentalSerde));
 
-
       // Now, let the magic happens!!
-      KStream<Integer, CustomerRentalMovieAggregate> chuckNorrisRentalsStream = rentalsStream.map((key, value) -> KeyValue.pair(value.getMovieId(), value))
-            .leftJoin(moviesTableInt, (rental, movie) ->
-                  rental.getEventType() == EventType.DELETE ?
-                        null : new CustomerRentalMovieAggregate(rental, movie))
-            .filter((movieId, urmAggregate) -> urmAggregate.getMovie().getMainActor().equals("Chuck Norris"))
-            .leftJoin(usersTableInt, (urmAggregate, customer) -> completeAggregate(urmAggregate, customer));
-
+      KStream<Integer, CustomerRentalMovieAggregate> chuckNorrisRentalsStream =
+            rentalsStream
+                  .map((rentalId, rental) -> new KeyValue<>(rental.getMovieId(), rental))
+                  .leftJoin(moviesTableInt, (rental, movie) -> new CustomerRentalMovieAggregate(rental, movie))
+                  .filter((movieId, urmAggregate) -> urmAggregate.getMovie().getMainActor().equals("Chuck Norris"))
+                  .leftJoin(usersTableInt, (urmAggregate, customer) -> completeAggregate(urmAggregate, customer));
       chuckNorrisRentalsStream.to(config.getTargetTopic(), Produced.with(Serdes.Integer(), aggregateSerde));
 
       chuckNorrisRentalsStream.print(Printed.toSysOut());
@@ -75,6 +79,7 @@ public class Main {
    }
 
    private static CustomerRentalMovieAggregate completeAggregate(CustomerRentalMovieAggregate urmAggregate, Customer customer) {
+      System.err.println("Completing CustomerRentalMovieAggregate with " + customer.toString());
       urmAggregate.setCustomer(customer);
       return urmAggregate;
    }

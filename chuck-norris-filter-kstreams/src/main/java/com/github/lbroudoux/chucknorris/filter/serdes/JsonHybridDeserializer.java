@@ -13,6 +13,7 @@ import java.util.Map;
 public class JsonHybridDeserializer<T> implements Deserializer<T> {
 
     public static final String DBZ_CDC_EVENT_PAYLOAD_FIELD = "payload";
+    public static final String DBZ_CDC_EVENT_AFTER_FIELD = "after";
 
     private final static ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
@@ -45,7 +46,14 @@ public class JsonHybridDeserializer<T> implements Deserializer<T> {
                     //NOTE: we record a delete event in this case
                     temp.put("_eventType", EventType.DELETE);
                 }
-                data = OBJECT_MAPPER.readValue(OBJECT_MAPPER.writeValueAsBytes(temp), clazz);
+                // TODO
+                //data = OBJECT_MAPPER.readValue(OBJECT_MAPPER.writeValueAsBytes(temp), clazz);
+                data = OBJECT_MAPPER.readValue(OBJECT_MAPPER.writeValueAsBytes(temp.get(DBZ_CDC_EVENT_AFTER_FIELD)), clazz);
+                if (data != null) {
+                    System.err.println("Just create a new: " + data.toString());
+                } else {
+                    System.err.println("Create a null object...");
+                }
             } catch(IOException e2) {
                 throw new SerializationException(e2);
             }

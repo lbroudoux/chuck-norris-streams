@@ -1,5 +1,6 @@
 package com.github.lbroudoux.chucknorris.filter.serdes;
 
+import com.github.lbroudoux.chucknorris.filter.model.CustomerRentalMovieAggregate;
 import org.apache.kafka.common.serialization.Deserializer;
 import org.apache.kafka.common.serialization.Serde;
 import org.apache.kafka.common.serialization.Serdes;
@@ -25,4 +26,39 @@ public class SerdeFactory {
         return Serdes.serdeFrom(ser, de);
     }
 
+    public static Serde<CustomerRentalMovieAggregate> CustomerRentalMovieAggregateSerde() {
+        return new CustomerRentalMovieAggregateSerde();
+    }
+
+    public static class CustomerRentalMovieAggregateSerde implements Serde<CustomerRentalMovieAggregate> {
+
+        Serializer<CustomerRentalMovieAggregate> ser = new JsonPojoSerializer<>();
+        Deserializer<CustomerRentalMovieAggregate> de = new JsonHybridDeserializer<>();
+
+        public CustomerRentalMovieAggregateSerde() {
+            Map<String, Object> serdeProps = new HashMap<>();
+            serdeProps.put("serializedClass", CustomerRentalMovieAggregate.class);
+
+            ser.configure(serdeProps, false);
+            de.configure(serdeProps, false);
+        }
+
+        @Override
+        public void configure(Map<String, ?> map, boolean b) { }
+
+        @Override
+        public void close() {
+
+        }
+
+        @Override
+        public Serializer<CustomerRentalMovieAggregate> serializer() {
+            return ser;
+        }
+
+        @Override
+        public Deserializer<CustomerRentalMovieAggregate> deserializer() {
+            return de;
+        }
+    }
 }

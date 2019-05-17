@@ -1,5 +1,8 @@
 package com.github.lbroudoux.chucknorris.filter;
 
+import com.github.lbroudoux.chucknorris.filter.model.CustomerRentalMovieAggregate;
+import com.github.lbroudoux.chucknorris.filter.serdes.SerdeFactory;
+import org.apache.kafka.common.serialization.Serde;
 import org.apache.kafka.common.serialization.Serdes;
 import org.apache.kafka.streams.StreamsConfig;
 import org.slf4j.Logger;
@@ -52,10 +55,10 @@ public class FilterConfig {
         String username = System.getenv("USERNAME") == null ? null : System.getenv("USERNAME");
         String password = System.getenv("PASSWORD") == null ? null : System.getenv("PASSWORD");
 
-        //return new FilterConfig(bootstrapServers, rentalsSourceTopic, moviesSourceTopic, customersSourceTopic, targetTopic, trustStorePassword, trustStorePath, keyStorePassword, keyStorePath, username, password);
+        return new FilterConfig(bootstrapServers, rentalsSourceTopic, moviesSourceTopic, customersSourceTopic, targetTopic, trustStorePassword, trustStorePath, keyStorePassword, keyStorePath, username, password);
 
-        return new FilterConfig("localhost:9092", "rental.rentals", "rental.movies",
-              "rental.customers", "rental.chucknorris", trustStorePassword, trustStorePath, keyStorePassword, keyStorePath, username, password);
+        //return new FilterConfig("localhost:9092", "rental.rentals", "rental.movies",
+        //      "rental.customers", "rental.chucknorris", trustStorePassword, trustStorePath, keyStorePassword, keyStorePath, username, password);
     }
 
     public String getBootstrapServers() {
@@ -98,8 +101,8 @@ public class FilterConfig {
         props.put(StreamsConfig.APPLICATION_ID_CONFIG, "chuck-norris-filter");
         props.put(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG, config.getBootstrapServers());
         props.put(StreamsConfig.COMMIT_INTERVAL_MS_CONFIG, 5000);
-        props.put(StreamsConfig.DEFAULT_KEY_SERDE_CLASS_CONFIG, Serdes.String().getClass());
-        props.put(StreamsConfig.DEFAULT_VALUE_SERDE_CLASS_CONFIG, Serdes.Float().getClass());
+        props.put(StreamsConfig.DEFAULT_KEY_SERDE_CLASS_CONFIG, Serdes.Integer().getClass());
+        props.put(StreamsConfig.DEFAULT_VALUE_SERDE_CLASS_CONFIG, SerdeFactory.CustomerRentalMovieAggregateSerde().getClass());
 
         if (config.getTrustStorePassword() != null && config.getTrustStorePath() != null)   {
             log.info("Configuring truststore");
