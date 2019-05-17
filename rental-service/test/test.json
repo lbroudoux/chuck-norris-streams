@@ -1,0 +1,27 @@
+{
+	"name": "rental-connector",
+	"config": {
+		"connector.class": "io.debezium.connector.mysql.MySqlConnector",
+		"database.user": "debezium",
+		"database.server.id": "184054",
+		"tasks.max": "1",
+		"database.history.kafka.bootstrap.servers": "my-cluster-kafka-bootstrap.amq-streams.svc.cluster.local:9092",
+		"database.history.kafka.topic": "schema-changes.rental",
+		"transforms": "unwrap",
+		"database.server.name": "mysqldb",
+		"database.port": "3306",
+		"database.hostname": "mysql",
+		"database.password": "dbz",
+		"transforms.unwrap.drop.tombstones": "false",
+		"name": "rental-connector",
+		"transforms.unwrap.type": "io.debezium.transforms.UnwrapFromEnvelope",
+		"snapshot.mode": "schema_only_recovery"
+	},
+	"tasks": [
+		{
+			"connector": "rental-connector",
+			"task": 0
+		}
+	],
+	"type": "source"
+}
