@@ -43,11 +43,11 @@ public class FilterConfig {
     }
 
     public static FilterConfig fromEnv() {
-        String bootstrapServers = System.getenv("BOOTSTRAP_SERVERS");
-        String rentalsSourceTopic = System.getenv("RENTALS_SOURCE_TOPIC");
-        String moviesSourceTopic = System.getenv("MOVIES_SOURCE_TOPIC");
-        String customersSourceTopic = System.getenv("CUSTOMERS_SOURCE_TOPIC");
-        String targetTopic = System.getenv("TARGET_TOPIC");
+        String bootstrapServers = "localhost:9092";
+        String rentalsSourceTopic = "dbserver1.inventory.rental";
+        String moviesSourceTopic = "dbserver1.inventory.movie";
+        String customersSourceTopic = "dbserver1.inventory.customer";
+        String targetTopic = "output";
         String trustStorePassword = System.getenv("TRUSTSTORE_PASSWORD") == null ? null : System.getenv("TRUSTSTORE_PASSWORD");
         String trustStorePath = System.getenv("TRUSTSTORE_PATH") == null ? null : System.getenv("TRUSTSTORE_PATH");
         String keyStorePassword = System.getenv("KEYSTORE_PASSWORD") == null ? null : System.getenv("KEYSTORE_PASSWORD");
