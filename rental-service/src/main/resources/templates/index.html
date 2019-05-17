@@ -12,12 +12,13 @@
 </head>
 <body>
 	<div class="container-fluid">
-		<div>
-			
-		</div>
+
+		<div th:insert="~{fragments/header :: header}"></div>
+
 		<div class="row">
 			<div class="col-auto">
-				<img alt="Chuck Norris" src="/chuck.png" class="img-fluid" style="height: 195px;">
+				<img alt="Chuck Norris" src="/chuck.png" class="img-fluid"
+					style="height: 195px;">
 			</div>
 			<div class="col-auto">
 				<div class="jumbotron">
@@ -29,11 +30,18 @@
 		</div>
 		<h2>Movie library</h2>
 		<div class="row">
-			<div th:each="m : ${movies}" class="col-auto" >
-			<p><img alt="Chuck Norris" th:src="'/'+${m.title}+'.jpg'" style="height: 195px;" class="img-fluid"></p>
-				<p class="btn btn-success" align="center" th:text="${m.title}">
+			<div th:each="m : ${movies}" class="col-auto">
+				<p class="alert alert-info" align="center" th:text="${m.title}">
+				<p style="text-align: center">
+					<img alt="Chuck Norris" th:src="'/'+${m.title}+'.jpg'"
+						style="height: 195px;" class="img-fluid">
+				</p>
 				<p align="center" th:text="${m.mainActor}">
 				<p align="center" th:text="${m.year}">
+				<div th:if="${session.customer} != null" style="text-align: center">
+					<a th:href="@{/rent/{id}(id=${m.id})}"><p class="btn btn-success">rent</p></a>
+				</div>
+
 			</div>
 		</div>
 	</div>

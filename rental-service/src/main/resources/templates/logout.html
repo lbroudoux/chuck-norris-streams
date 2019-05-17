@@ -11,25 +11,12 @@
 	crossorigin="anonymous">
 </head>
 <body>
+
 	<div class="container-fluid">
 
-		<div th:insert="~{fragments/header :: header}"></div>
+    	<div th:insert="~{fragments/header :: header}"></div>
 
-
-		<h2>Rented movies</h2>
-		<div class="row">
-			<div th:each="r : ${rentals}" class="col-auto">
-				<p class="alert alert-info" align="center" th:text="${r.movie.title}">
-				<p style="text-align: center">
-					<img alt="Chuck Norris" th:src="'/'+${r.movie.title}+'.jpg'"
-						style="height: 195px;" class="img-fluid">
-				</p>
-				<p align="center" th:text="${r.movie.mainActor}">
-				<p align="center" th:text="${r.movie.year}">
-				<p align="center" th:text="'Rented on ' + ${#dates.format(r.startDate, 'dd-MMM-yyyy')} + ' for ' + ${r.rentalDuration} + 'days'">
-			</div>
-		</div>
-	</div>
+		<h1>You have been logged out</h1>
 	</div>
 
 	<!-- Optional JavaScript -->
