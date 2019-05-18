@@ -10,6 +10,7 @@
 
             <get uri="/fact">
                 <route>
+                    <removeHeaders pattern="*"/>
                     <transform>
                         <method ref="myTransformer" method="content" />
                     </transform>
@@ -17,7 +18,7 @@
                         <json library="Jackson" useList="true" />
                     </unmarshal>
                     <setHeader headerName="randomFactNb">
-                        <simple>random(0,25)</simple>
+                        <simple>random(0,23)</simple>
                     </setHeader>
                     <setBody>
                         <simple>${body[${header.randomFactNb}]}</simple>
