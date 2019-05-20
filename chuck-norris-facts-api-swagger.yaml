@@ -1,0 +1,48 @@
+---
+swagger: "2.0"
+info:
+  title: chuck-norris-facts-api
+  version: 1.0-SNAPSHOT
+host: chuck-norris-facts-api-chuck-movie-rental.apps.144.76.24.92.nip.io
+basePath: /camel
+schemes:
+- http
+paths:
+  /restsvc/fact:
+    get:
+      tags:
+      - restsvc
+      operationId: route2
+      responses:
+        200:
+          description: facts
+          schema:
+            $ref: '#/definitions/fact'
+          examples: {}
+definitions:
+  fact:
+    required:
+    - id
+    - fact
+    - date
+    - vote
+    - points
+    type: object
+    properties:
+      id:
+        pattern: ^(.*)$
+        type: string
+      fact:
+        pattern: ^(.*)$
+        type: string
+      date:
+        pattern: ^(.*)$
+        type: string
+      vote:
+        pattern: ^(.*)$
+        type: string
+      points:
+        pattern: ^(.*)$
+        type: string
+tags:
+- name: restsvc
