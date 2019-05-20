@@ -44,7 +44,7 @@ public class Customer {
     /**
      * @return the firstName
      */
-    public String getFirstName() {
+    public String getFirstname() {
         return firstname;
     }
 
