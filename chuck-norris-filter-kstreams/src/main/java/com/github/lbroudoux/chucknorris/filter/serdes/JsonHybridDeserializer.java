@@ -18,11 +18,13 @@ public class JsonHybridDeserializer<T> implements Deserializer<T> {
     private final static ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
     private Class<T> clazz;
+    private boolean isKey;
 
     @SuppressWarnings("unchecked")
     @Override
     public void configure(Map<String, ?> props, boolean isKey) {
         clazz = (Class<T>)props.get("serializedClass");
+        this.isKey = isKey;
     }
 
     @Override
@@ -37,6 +39,7 @@ public class JsonHybridDeserializer<T> implements Deserializer<T> {
         try {
             data = OBJECT_MAPPER.readValue(bytes, clazz);
         } catch (IOException e1) {
+            //System.out.println(e1);
             //step2: try to deserialize from DBZ json event
             try {
                 Map temp = (Map) OBJECT_MAPPER.readValue(new String(bytes), Map.class)
@@ -48,11 +51,22 @@ public class JsonHybridDeserializer<T> implements Deserializer<T> {
                 }
                 // TODO
                 //data = OBJECT_MAPPER.readValue(OBJECT_MAPPER.writeValueAsBytes(temp), clazz);
-                data = OBJECT_MAPPER.readValue(OBJECT_MAPPER.writeValueAsBytes(temp.get(DBZ_CDC_EVENT_AFTER_FIELD)), clazz);
-                if (data != null) {
-                    System.err.println("Just create a new: " + data.toString());
+
+                if (isKey) {
+                    // The key is decoded directly into Integer => this is an ugly code, but should work
+                    data = OBJECT_MAPPER.readValue(OBJECT_MAPPER.writeValueAsBytes(temp.get("id")), clazz);
+                    if (data != null) {
+                        System.err.println("Just create a new key: " + data.toString());
+                    } else {
+                        System.err.println("Create a null key object...");
+                    }
                 } else {
-                    System.err.println("Create a null object...");
+                    data = OBJECT_MAPPER.readValue(OBJECT_MAPPER.writeValueAsBytes(temp.get(DBZ_CDC_EVENT_AFTER_FIELD)), clazz);
+                    if (data != null) {
+                        System.err.println("Just create a new: " + data.toString());
+                    } else {
+                        System.err.println("Create a null object...");
+                    }
                 }
             } catch(IOException e2) {
                 throw new SerializationException(e2);
