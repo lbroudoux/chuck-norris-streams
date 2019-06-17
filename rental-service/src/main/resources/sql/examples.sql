@@ -24,35 +24,33 @@ VALUES( 'alain', 'pham', '@koint');
 INSERT INTO customer
 ( first_name, last_name, twitter_handle)
 VALUES( 'laurent', 'broudoux', '@lbroudoux');
-
+select 
 
 
 update movie set main_actor='Jessica Lange ' where id =1;
 update movie set main_actor='Chuck Norris ' where id =2;
-update movie set main_actor='Chuck Norris ' where id =3;
+update movie set main_actor='Anthony Hopkins ' where id =3;
 update movie set main_actor='Chuck Norris ' where id =4;
-update movie set main_actor='Roger Miller ' where id =5;
-update movie set main_actor='Charles Chaplin ' where id =6;
-update movie set main_actor='Chuck Norris ' where id =7;
-update movie set main_actor='James Stewart ' where id =8;
-update movie set main_actor='Anthony Hopkins ' where id =9;
+update movie set main_actor='Chuck Norris ' where id =5;
+update movie set main_actor='Roger Miller ' where id =6;
+update movie set main_actor='Charles Chaplin ' where id =7;
+update movie set main_actor='Chuck Norris ' where id =8;
+update movie set main_actor='James Stewart ' where id =9;
 
 update customer set last_name='pham ' where id =1;
 update customer set last_name='broudoux ' where id =2;
 
 update movie set main_actor='Jessica Lange' where id =1;
 update movie set main_actor='Chuck Norris' where id =2;
-update movie set main_actor='Chuck Norris' where id =3;
+update movie set main_actor='Anthony Hopkins' where id =3;
 update movie set main_actor='Chuck Norris' where id =4;
-update movie set main_actor='Roger Miller' where id =5;
+update movie set main_actor='Chuck Norris' where id =5;
+update movie set main_actor='Roger Miller' where id =6;
 update movie set main_actor='Charles Chaplin' where id =7;
-update movie set main_actor='Chuck Norris' where id =7;
-update movie set main_actor='James Stewart' where id =8;
-update movie set main_actor='Anthony Hopkins' where id =9;
+update movie set main_actor='Chuck Norris' where id =8;
+update movie set main_actor='James Stewart' where id =9;
 
 update customer set last_name='pham' where id =1;
 update customer set last_name='broudoux' where id =2;
-
-
 
 commit;

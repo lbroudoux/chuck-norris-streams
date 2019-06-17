@@ -69,6 +69,7 @@ public class Main {
 
       // Building everything and run it.
       KafkaStreams streams = new KafkaStreams(builder.build(), kafkaStreamsConfig);
+      System.err.println("Starting streams!");
       streams.start();
    }
 
