@@ -2,16 +2,33 @@
 
 ## Introduction
 
-This repository is a demonstration of Change Data Capture and Stream Processing capabilities on OpenShift Kubernetes platform. 
+This repository is a demonstration of Change Data Capture and Stream Processing capabilities on OpenShift Kubernetes platform. Our -fictionnal- use-case is to enhance an existing Movie Rental application that is specialized into Chuck Morris movies ;-) We have 2 goals for this app and we will focus our effort on customer who rent Chuck movies only:
+* Enhance customer relationship and knowledge through the usage of Salesforce CRM,
+* Enhance customer experience by starting interacting and sending fun facts about Chuck Norris through Telegram.
 
-![Video demonstration](./assets/chuck-demo.mp4)
+In order to implement these enhancement, we want to leave the existing app unchanged and will process by adding new capabilities around the existing components. We will use Change Data Capture for that as it is a really powerfull pattern that lowers the operational risks and implementation issues and provides a scalable and non-intrusive solution. Change Data Capture is really helpful for extracting events from browfield applications and store this events into a log or a broker. Then we can easily add new greenfield feataures by leveraging integration capabilities and using modern patterns like Stream Processing and Microservices.
+
+![CDC Browfield](./assets/cdc-in-brownfield.png)
+
+For this demonstration, we have used:
+* [Debezium](https://debezium.io) that run into Kubernetes, capture database events and send them to a [Kafka](http://kafka.apache.org) broker, 
+* [AMQ Streams / Strimzi](https://www.redhat.com/en/technologies/jboss-middleware/amq) as a Kafka distribution optimized for Kubernetes,
+* [Fuse Online / Syndesis](https://www.redhat.com/en/technologies/jboss-middleware/fuse-online) as a Kubernetes iPaaS that makes it easy to configure real-time integrations.
+
+Click on the image below to start the video!
+
+[![Video demonstration](./assets/chuck-demo.png)](https://github.com/lbroudoux/chuck-norris-streams/blob/master/assets/chuck-demo.mp4?raw=true)
+
+## Architecture
+
+![Architecture overview](./assets/architecture-overview.png)
 
 ## Pre-requisites
 
 Before starting the setup of this demonstration, you'll need some pre-requisites:
 * An [OpenShift Container Platform](https://www.openshift.com) cluster with the 3.11.x version installed,
 * A valid AMQ Streams installation on top of your OpenShift cluster. We've used release 1.1 of AMQ Streams that comes from Red Hat Integration 7.3. See [setup instructions](https://access.redhat.com/documentation/en-us/red_hat_amq/7.3/html-single/using_amq_streams_on_openshift_container_platform/index). Strimzi (http://strimzi.io) community project can also be used as replacement, Strimzi being the upstream community project of AMQ Streams. For the rest of this demonstration, we assume the broker is available with the `amq-streams` namespace,
-* A valid Fuse Online installation on top of your OpenShift cluster, We've used the one that comes from Red Hat Integration 7.3. See [setup instructions](https://access.redhat.com/documentation/en-us/red_hat_fuse/7.3/html/integrating_applications_with_fuse_online/fuse-online-on-ocp_ug). Syndesis (http://syndesis.io) community project can also be used as replacement, Syndesis being the upstream community project of Fuse Online. For the rest of this demonstration, we assume it has been deployed into `fuse-online`namespace,
+* A valid Fuse Online installation on top of your OpenShift cluster, We've used the one that comes from Red Hat Integration 7.3. See [setup instructions](https://access.redhat.com/documentation/en-us/red_hat_fuse/7.3/html/integrating_applications_with_fuse_online/fuse-online-on-ocp_ug). Syndesis (http://syndesis.io) community project can also be used as replacement, Syndesis being the upstream community project of Fuse Online. For the rest of this demonstration, we assume it has been deployed into `fuse-online` namespace,
 * A SalesForce developer account. See https://developer.salesforce.com,
 * A Telegram account. See https://web.telegram.org.
 
@@ -129,10 +146,47 @@ We'll setup a Debezium connector for `mysqldebezium` database that will push eve
 
 Our purpose for this use-case is to detect each movie rental where the movie main actor is `Chuck Norris` ;-) and then to trigger integration routes for adding new Contact into Salesforce and chatting on Telegram. In order to detect the correct events and filter those of interest for us, we are using Kafka Stream framework for writing a new component. 
 
-We'll setup a new component called `chuck-norris-filter-kstreams` that will listen to the 3 topics provided by Debezium. This component will filter out the new rental events and produce JSON aggregated payload on a new `rental-chuck-norris`. All detailed instructions given into [kstream-config](./kstream-config.md).
+We'll setup a new component called `chuck-norris-filter-kstreams` that will listen to the 3 topics provided by Debezium. This component will filter out the new rental events and produce JSON aggregated payload on a new `rental-chuck-norris` topic. All detailed instructions given into [kstream-config](./kstream-config.md).
 
 ### Deploy Fuse Online integration routes
 
 All detailed instructions given into [fuse-online](./fuse-online.md).
 
 ## Run the demo
+
+Running the demo is just easy:
+* Connect to the frontend `rental-service` route and through the GUI proceed to customer authentication (you'll only need customer identifier),
+* Browse movies from catalog and rent movies:
+    * Renting a movie where main actor IS NOT Chuck Norris will no do anything special
+    * Renting a movie where main actor IS Chuck Norris will produce a new Contact in Salesforce and a new Telegram message
+
+Depending on the initilaization sequence of components, it is possible the `chuck-norris-filter-kstreams` did not react and create new rental on the target topic. In that case, you may have to connect to the `mysqldebezium` database and simulate update of customers and movies in order to refresh the KTables uesd by the component.
+
+You may want to use this following SQL snippets for that :
+```
+update movie set main_actor='Jessica Lange ' where id =1;
+update movie set main_actor='Chuck Norris ' where id =2;
+update movie set main_actor='Anthony Hopkins ' where id =3;
+update movie set main_actor='Chuck Norris ' where id =4;
+update movie set main_actor='Chuck Norris ' where id =5;
+update movie set main_actor='Roger Miller ' where id =6;
+update movie set main_actor='Charles Chaplin ' where id =7;
+update movie set main_actor='Chuck Norris ' where id =8;
+update movie set main_actor='James Stewart ' where id =9;
+
+update customer set last_name='pham ' where id =1;
+update customer set last_name='broudoux ' where id =2;
+
+update movie set main_actor='Jessica Lange' where id =1;
+update movie set main_actor='Chuck Norris' where id =2;
+update movie set main_actor='Anthony Hopkins' where id =3;
+update movie set main_actor='Chuck Norris' where id =4;
+update movie set main_actor='Chuck Norris' where id =5;
+update movie set main_actor='Roger Miller' where id =6;
+update movie set main_actor='Charles Chaplin' where id =7;
+update movie set main_actor='Chuck Norris' where id =8;
+update movie set main_actor='James Stewart' where id =9;
+
+update customer set last_name='pham' where id =1;
+update customer set last_name='broudoux' where id =2;
+```

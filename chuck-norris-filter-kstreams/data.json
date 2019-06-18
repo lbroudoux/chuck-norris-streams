@@ -1,0 +1,21 @@
+{
+    "rental": {
+        "id": 1,
+        "user_id": 1,
+        "movie_id": 1,
+        "start_date": 1558093022000,
+        "rental_duration": 3
+    },
+    "movie": {
+        "id": 1,
+        "title": "The Delta Force",
+        "year": 1986,
+        "main_actor": "Chuck Norris"
+    },
+    "customer": {
+        "id": 1,
+        "first_name": "Laurent",
+        "last_name": "Broudoux",
+        "twitter_handle": "@lbroudoux"
+    }
+}
