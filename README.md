@@ -21,6 +21,8 @@ Click on the image below to start the video!
 
 ## Architecture
 
+The schema just below represents an overview of the application architecture. We have existing brownfield components on the very left and we add all the green components for implementing the new capabilities. 
+
 ![Architecture overview](./assets/architecture-overview.png)
 
 ## Pre-requisites
