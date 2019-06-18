@@ -2,6 +2,10 @@
 
 ## Introduction
 
+This repository is a demonstration of Change Data Capture and Stream Processing capabilities on OpenShift Kubernetes platform. 
+
+![Video demonstration](./assets/chuck-demo.mp4)
+
 ## Pre-requisites
 
 Before starting the setup of this demonstration, you'll need some pre-requisites:
