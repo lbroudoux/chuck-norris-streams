@@ -13,22 +13,24 @@ As described on [Connecting to Telegram](https://access.redhat.com/documentation
 
 ```
 {
-  "id" : 27,
-  "rental_duration" : 7,
-  "start_date" : 1558343540000,
-  "customer_id" : 1,
-  "movie_id" : 2,
-  "movie" : {
-    "id" : 2,
-    "main_actor" : "Chuck Norris",
-    "title" : "Delta Force",
-    "year" : 1986
+  "rental": {
+    "id": 1,
+    "user_id": 1,
+    "movie_id": 1,
+    "start_date": "2019-05-16",
+    "rental_duration": 3
   },
-  "customer" : {
-    "id" : 1,
-    "first_name" : "alain",
-    "last_name" : "pham",
-    "twitter_handle" : "@koint"
+  "movie": {
+    "id": 1,
+    "title": "The Delta Force",
+    "year": 1986,
+    "main_actor": "Chuck Norris"
+  },
+  "customer": {
+    "id": 1,
+    "first_name": "Laurent",
+    "last_name": "Broudoux",
+    "twitter_handle": "@lbroudoux"
   }
 }
 ```

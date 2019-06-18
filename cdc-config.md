@@ -29,24 +29,20 @@ oc exec -i $(oc get pods | grep debezium-connect | awk '{print $1}') -- curl -X 
     -H "Accept:application/json" \
     -H "Content-Type:application/json" \
     http://localhost:8083/connectors -d @- <<'EOF'
-
 {
-    "name": "rental-connector",
+    "name": "rental-event-connector",
     "config": {
         "connector.class": "io.debezium.connector.mysql.MySqlConnector",
         "tasks.max": "1",
-        "database.hostname": "mysql",
+        "database.hostname": "mysqldebezium.chuck-movie-rental.svc.cluster.local",
         "database.port": "3306",
         "database.user": "debezium",
         "database.password": "dbz",
         "database.server.id": "184054",
-        "database.server.name": "mysqldb",
+        "database.server.name": "dbserver1",
+        "database.whitelist": "inventory",
         "database.history.kafka.bootstrap.servers": "my-cluster-kafka-bootstrap.amq-streams.svc.cluster.local:9092",
-        "database.history.kafka.topic": "schema-changes.rental",
-        "transforms": "unwrap",
-        "transforms.unwrap.type":"io.debezium.transforms.UnwrapFromEnvelope",
-        "transforms.unwrap.drop.tombstones":"false",
-        "snapshot.mode": "schema_only_recovery"
+        "database.history.kafka.topic": "schema-changes.inventory"
     }
 }
 EOF
@@ -65,15 +61,14 @@ And check connector details:
 ```
 oc exec -i $(oc get pods | grep debezium-connect | awk '{print $1}') -- curl \
     -H "Accept:application/json" \
-    http://localhost:8083/connectors/rental-connector
+    http://localhost:8083/connectors/rental-event-connector
 ```
 
 ```
 oc exec -i $(oc get pods | grep debezium-connect | awk '{print $1}') -- curl \
     -H "Accept:application/json" \
-    -XDELETE http://localhost:8083/connectors/rental-connector
+    -XDELETE http://localhost:8083/connectors/rental-event-connector
 ```
-
 
 
 ### Trouble shooting
@@ -131,77 +126,3 @@ oc exec -n amq-streams -it my-cluster-kafka-0 -- /opt/kafka/bin/kafka-console-co
     --property print.key=true \
     --topic events.rentals
 ```
-
-
-oc exec -i $(oc get pods | grep debezium-connect | awk '{print $1}') -- curl -X POST \
-    -H "Accept:application/json" \
-    -H "Content-Type:application/json" \
-    http://localhost:8083/connectors -d @- <<'EOF'
-{
-    "name": "rental-event-connector",
-    "config": {
-        "connector.class": "io.debezium.connector.mysql.MySqlConnector",
-        "tasks.max": "1",
-        "database.hostname": "mysqldebezium.chuck-movie-rental.svc.cluster.local",
-        "database.port": "3306",
-        "database.user": "debezium",
-        "database.password": "dbz",
-        "database.server.id": "184054",
-        "database.server.name": "dbserver1",
-        "database.whitelist": "inventory",
-        "database.history.kafka.bootstrap.servers": "my-cluster-kafka-bootstrap.amq-streams.svc.cluster.local:9092",
-        "database.history.kafka.topic": "schema-changes.inventory"
-    }
-}
-EOF
-
-oc exec -i $(oc get pods | grep debezium-connect | awk '{print $1}') -- curl -X POST \
-    -H "Accept:application/json" \
-    -H "Content-Type:application/json" \
-    http://localhost:8083/connectors -d @- <<'EOF'
-{
-    "name": "rental-event-connector",
-    "config": {
-        "connector.class": "io.debezium.connector.mysql.MySqlConnector",
-        "tasks.max": "1",
-        "database.hostname": "mysqldebezium.chuck-movie-rental.svc.cluster.local",
-        "database.port": "3306",
-        "database.user": "debezium",
-        "database.password": "dbz",
-        "database.server.id": "184054",
-        "database.server.name": "dbserver1",
-        "database.whitelist": "inventory",
-        "database.history.kafka.bootstrap.servers": "my-cluster-kafka-bootstrap.amq-streams.svc.cluster.local:9092",
-        "database.history.kafka.topic": "schema-changes.inventory",
-        "snapshot.mode": "schema_only_recovery"
-    }
-}
-EOF
-
-oc exec -i $(oc get pods | grep debezium-connect | awk '{print $1}') -- curl -X POST \
-    -H "Accept:application/json" \
-    -H "Content-Type:application/json" \
-    http://localhost:8083/connectors -d @- <<'EOF'
-{
-    "name": "rental-event-connector",
-    "config": {
-        "connector.class": "io.debezium.connector.mysql.MySqlConnector",
-        "tasks.max": "1",
-        "database.hostname": "mysqldebezium.chuck-movie-rental.svc.cluster.local",
-        "database.port": "3306",
-        "database.user": "debezium",
-        "database.password": "dbz",
-        "database.server.id": "184054",
-        "database.server.name": "dbserver1",
-        "database.whitelist": "inventory",
-        "database.history.kafka.bootstrap.servers": "my-cluster-kafka-bootstrap.amq-streams.svc.cluster.local:9092",
-        "database.history.kafka.topic": "schema-changes.inventory",
-        "snapshot.mode": "when_needed"
-    }
-}
-EOF
-
-
-"transforms": "unwrap",
-"transforms.unwrap.type":"io.debezium.transforms.UnwrapFromEnvelope",
-"transforms.unwrap.drop.tombstones":"false",

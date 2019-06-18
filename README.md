@@ -1,11 +1,13 @@
 # Chuck Norris streams demonstration
 
+## Introduction
+
 ## Pre-requisites
 
 Before starting the setup of this demonstration, you'll need some pre-requisites:
 * An [OpenShift Container Platform](https://www.openshift.com) cluster with the 3.11.x version installed,
-* A valid AMQ Streams installation on top of your OpenShift cluster. We've used release 1.1 of AMQ Streams that comes from Red Hat Integration 7.3. See [setup instructions](https://access.redhat.com/documentation/en-us/red_hat_amq/7.3/html-single/using_amq_streams_on_openshift_container_platform/index). Strimzi (http://strimzi.io) community project can also be used as replacement, Strimzi being the upstream community project of AMQ Streams,
-* A valid Fuse Online installation on top of your OpenShift cluster, We've used the one that comes from Red Hat Integration 7.3. See [setup instructions](https://access.redhat.com/documentation/en-us/red_hat_fuse/7.3/html/integrating_applications_with_fuse_online/fuse-online-on-ocp_ug). Syndesis (http://syndesis.io) community project can also be used as replacement, Syndesis being the upstream community project of Fuse Online, 
+* A valid AMQ Streams installation on top of your OpenShift cluster. We've used release 1.1 of AMQ Streams that comes from Red Hat Integration 7.3. See [setup instructions](https://access.redhat.com/documentation/en-us/red_hat_amq/7.3/html-single/using_amq_streams_on_openshift_container_platform/index). Strimzi (http://strimzi.io) community project can also be used as replacement, Strimzi being the upstream community project of AMQ Streams. For the rest of this demonstration, we assume the broker is available with the `amq-streams` namespace,
+* A valid Fuse Online installation on top of your OpenShift cluster, We've used the one that comes from Red Hat Integration 7.3. See [setup instructions](https://access.redhat.com/documentation/en-us/red_hat_fuse/7.3/html/integrating_applications_with_fuse_online/fuse-online-on-ocp_ug). Syndesis (http://syndesis.io) community project can also be used as replacement, Syndesis being the upstream community project of Fuse Online. For the rest of this demonstration, we assume it has been deployed into `fuse-online`namespace,
 * A SalesForce developer account. See https://developer.salesforce.com,
 * A Telegram account. See https://web.telegram.org.
 
@@ -61,7 +63,7 @@ $ oc get pods
 NAME                                           READY     STATUS      RESTARTS   AGE
 chuck-norris-facts-api-1-5zqvj                 1/1       Running     1          1d
 chuck-norris-facts-api-s2i-1-build             0/1       Completed   0          1d
-mysqldebezium-2-mf46w                                  1/1       Running     2          1d
+mysqldebezium-2-mf46w                          1/1       Running     2          1d
 rental-service-1-6njpn                         1/1       Running     1          1d
 rental-service-s2i-1-build                     0/1       Completed   0          1d
 ```
@@ -108,20 +110,25 @@ You should also be able to expose the `rental-service` and the `chuck-norris-fac
 $ oc expose svc/rental-service
 $ oc expose svc/chuck-norris-facts-api
 $ oc get routes
-NAME                        HOST/PORT                                                               PATH      SERVICES                    PORT      TERMINATION   WILDCARD
-chuck-norris-facts-api      chuck-norris-facts-api-chuck-movie-rental.apps.144.76.24.92.nip.io                chuck-norris-facts-api      8080                    None
-rental-service              rental-service-chuck-movie-rental.apps.144.76.24.92.nip.io                        rental-service              8080                    None
+NAME                        HOST/PORT                                                          PATH      SERVICES                    PORT      TERMINATION   WILDCARD
+chuck-norris-facts-api      chuck-norris-facts-api-chuck-movie-rental.apps.x.x.x.x.nip.io                chuck-norris-facts-api      8080                    None
+rental-service              rental-service-chuck-movie-rental.apps.x.x.x.x.nip.io                        rental-service              8080                    None
 ```
 
 ### Deploy Debezium Change Data Capture
 
-In order to transform any change applied to the Database into events onto Kafka topics, 
-All detailed instructions given into [cdc-config](./cdc-config.md).
+In order to transform any change applied to the Database into events onto Kafka topics, we'll use [Debezium](http://www.debezium.io) Change Data Capture. Debezium is implemented using Kafka-connect framework. It listens your database binary logs and transform each UPSERT or DELETE into an event with JSON payload representing the data before and after the operation occurs. 
+
+We'll setup a Debezium connector for `mysqldebezium` database that will push events to 3 topics named `dbserver1.inventory.customer`, `dbserver1.inventory.movie` and `dbserver1.inventory.rental`. All detailed instructions are given into [cdc-config](./cdc-config.md).
+
+### Deploy Kafka Streams filter
+
+Our purpose for this use-case is to detect each movie rental where the movie main actor is `Chuck Norris` ;-) and then to trigger integration routes for adding new Contact into Salesforce and chatting on Telegram. In order to detect the correct events and filter those of interest for us, we are using Kafka Stream framework for writing a new component. 
+
+We'll setup a new component called `chuck-norris-filter-kstreams` that will listen to the 3 topics provided by Debezium. This component will filter out the new rental events and produce JSON aggregated payload on a new `rental-chuck-norris`. All detailed instructions given into [kstream-config](./kstream-config.md).
 
 ### Deploy Fuse Online integration routes
 
 All detailed instructions given into [fuse-online](./fuse-online.md).
-
-### Deploy Kafka Streams filter
 
 ## Run the demo

@@ -3,25 +3,25 @@ From the 3 topics created by Debezium, we want to produce following message on `
 
 ```
 {
-    "rental": {
-        "id": 1,
-        "user_id": 1,
-        "movie_id": 1,
-        "start_date": "2019-05-16",
-        "rental_duration": 3
-    },
-    "movie": {
-        "id": 1,
-        "title": "The Delta Force",
-        "year": 1986,
-        "main_actor": "Chuck Norris"
-    },
-    "customer": {
-        "id": 1,
-        "first_name": "Laurent",
-        "last_name": "Broudoux",
-        "twitter_handle": "@lbroudoux"
-    }
+  "rental": {
+    "id": 1,
+    "user_id": 1,
+    "movie_id": 1,
+    "start_date": "2019-05-16",
+    "rental_duration": 3
+  },
+  "movie": {
+    "id": 1,
+    "title": "The Delta Force",
+    "year": 1986,
+    "main_actor": "Chuck Norris"
+  },
+  "customer": {
+    "id": 1,
+    "first_name": "Laurent",
+    "last_name": "Broudoux",
+    "twitter_handle": "@lbroudoux"
+  }
 }
 ```
 
