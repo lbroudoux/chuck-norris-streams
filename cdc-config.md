@@ -1,5 +1,5 @@
 
-From within the `chuck-movie-rental` OpenShift project.
+From within the `amq-streams` OpenShift project.
 
 ### Create Debezium Connect pod
 
@@ -25,10 +25,10 @@ cd .. && rm -rf plugins
 #### MySQL version
 
 ```
-oc exec -i $(oc get pods | grep debezium-connect | awk '{print $1}') -- curl -X POST \
+oc exec -i my-cluster-kafka-0 -c kafka -- curl -s -X POST \
     -H "Accept:application/json" \
     -H "Content-Type:application/json" \
-    http://localhost:8083/connectors -d @- <<'EOF'
+    http://debezium-connect-api:8083/connectors -d @- <<'EOF'
 {
     "name": "rental-event-connector",
     "config": {
@@ -51,23 +51,23 @@ EOF
 ### Check connector existence and details
 
 ```
-oc exec -i $(oc get pods | grep debezium-connect | awk '{print $1}') -- curl \
+oc exec -i my-cluster-kafka-0 -c kafka -- curl -s \
     -H "Accept:application/json" \
-    http://localhost:8083/connectors
+    http://debezium-connect-api:8083/connectors
 ```
 
 And check connector details:
 
 ```
-oc exec -i $(oc get pods | grep debezium-connect | awk '{print $1}') -- curl \
+oc exec -i my-cluster-kafka-0 -c kafka -- curl -s \
     -H "Accept:application/json" \
-    http://localhost:8083/connectors/rental-event-connector
+    http://debezium-connect-api:8083/connectors/rental-event-connector
 ```
 
 ```
-oc exec -i $(oc get pods | grep debezium-connect | awk '{print $1}') -- curl \
+oc exec -i my-cluster-kafka-0 -c kafka -- curl -s \
     -H "Accept:application/json" \
-    -XDELETE http://localhost:8083/connectors/rental-event-connector
+    -XDELETE http://debezium-connect-api:8083/connectors/rental-event-connector
 ```
 
 
@@ -76,7 +76,7 @@ oc exec -i $(oc get pods | grep debezium-connect | awk '{print $1}') -- curl \
 Listing existing topics on cluster:
 
 ```
-oc exec -n amq-streams -it my-cluster-kafka-0 -- /opt/kafka/bin/kafka-topics.sh \
+oc exec -it my-cluster-zookeeper-0 -c zookeeper -- /opt/kafka/bin/kafka-topics.sh \
     --zookeeper localhost:21810 \
     --list
 ```
@@ -84,43 +84,43 @@ oc exec -n amq-streams -it my-cluster-kafka-0 -- /opt/kafka/bin/kafka-topics.sh 
 Checking the differents topics content:
 
 ```
-oc exec -n amq-streams -it my-cluster-kafka-0 -- /opt/kafka/bin/kafka-console-consumer.sh \
+oc exec -it my-cluster-kafka-0 -c kafka -- /opt/kafka/bin/kafka-console-consumer.sh \
     --bootstrap-server localhost:9092 \
     --from-beginning \
     --property print.key=true \
     --topic dbserver1.inventory.customer
 
-oc exec -n amq-streams -it my-cluster-kafka-0 -- /opt/kafka/bin/kafka-console-consumer.sh \
+oc exec -it my-cluster-kafka-0 -c kafka -- /opt/kafka/bin/kafka-console-consumer.sh \
     --bootstrap-server localhost:9092 \
     --from-beginning \
     --property print.key=true \
     --topic dbserver1.inventory.movie
 
-oc exec -n amq-streams -it my-cluster-kafka-0 -- /opt/kafka/bin/kafka-console-consumer.sh \
+oc exec -it my-cluster-kafka-0 -c kafka -- /opt/kafka/bin/kafka-console-consumer.sh \
     --bootstrap-server localhost:9092 \
     --from-beginning \
     --property print.key=true \
     --topic dbserver1.inventory.rental
 
-oc exec -n amq-streams -it my-cluster-kafka-0 -- /opt/kafka/bin/kafka-console-consumer.sh \
+oc exec -it my-cluster-kafka-0 -c kafka -- /opt/kafka/bin/kafka-console-consumer.sh \
     --bootstrap-server localhost:9092 \
     --from-beginning \
     --property print.key=true \
     --topic connect-cluster-configs
 
-oc exec -n amq-streams -it my-cluster-kafka-0 -- /opt/kafka/bin/kafka-console-consumer.sh \
+oc exec -it my-cluster-kafka-0 -c kafka -- /opt/kafka/bin/kafka-console-consumer.sh \
     --bootstrap-server localhost:9092 \
     --from-beginning \
     --property print.key=true \
     --topic connect-cluster-offsets
 
-oc exec -n amq-streams -it my-cluster-kafka-0 -- /opt/kafka/bin/kafka-console-consumer.sh \
+oc exec -it my-cluster-kafka-0 -c kafka -- /opt/kafka/bin/kafka-console-consumer.sh \
     --bootstrap-server localhost:9092 \
     --from-beginning \
     --property print.key=true \
     --topic rental-chuck-norris
 
-oc exec -n amq-streams -it my-cluster-kafka-0 -- /opt/kafka/bin/kafka-console-consumer.sh \
+oc exec -it my-cluster-kafka-0 -c kafka -- /opt/kafka/bin/kafka-console-consumer.sh \
     --bootstrap-server localhost:9092 \
     --from-beginning \
     --property print.key=true \
