@@ -57,7 +57,7 @@ We'll also have to set specific credentials for the database access.
 
 ```
 # Configure credentials for the database
-oc env dc/mysqldebezium MYSQL_ROOT_PASSWORD=password MYSQL_USER=chuck MYSQL_PASSWORD=password -n chuck-movie-rental
+oc set env dc/mysqldebezium MYSQL_ROOT_PASSWORD=password MYSQL_USER=chuck MYSQL_PASSWORD=password -n chuck-movie-rental
 ```
 
 Now, we'll have to deploy the application allowing to expose GUI and API for our movie online store. For that, just clone the Git repository, be sure to use the newly created `chuck-movie-rental` project and launch the Maven task that will build locally the project and than interact with OpenShift for you to get a new running pod:
