@@ -41,7 +41,7 @@ You should also have the `oc` client line interface tool installed on your machi
 Whilst AMQ Streams and Fuse Online may be installed into their own namespace/project, we'll recommend setting up a new project for hosting the components of this demonstration:
 
 ```
-oc new-project chuck-movie-rental --dsiplay-name='Chuck Movie Rental'
+oc new-project chuck-movie-rental --display-name='Chuck Movie Rental'
 ```
 
 ### Deploy base components
