@@ -1,6 +1,8 @@
 
 From within the `chuck-movie-rental` OpenShift project.
 
+On OpenShift 3.11, we assume OpenShift templates from AMQ Streams or Strimzi packages have been made available to the project so that we can use the `oc new-app strimzi-connect-s2i` command.
+
 ### Create Debezium Connect pod
 
 ```

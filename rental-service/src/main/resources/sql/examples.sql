@@ -24,8 +24,6 @@ VALUES( 'alain', 'pham', '@koint');
 INSERT INTO customer
 ( first_name, last_name, twitter_handle)
 VALUES( 'laurent', 'broudoux', '@lbroudoux');
-select 
-
 
 update movie set main_actor='Jessica Lange ' where id =1;
 update movie set main_actor='Chuck Norris ' where id =2;
