@@ -110,7 +110,15 @@ oc exec -i $(oc get pods--field-selector=status.phase==Running | grep debezium-c
 
 ### Trouble shooting
 
-Listing existing topics on cluster:
+For visual trouble shooting, you may want to use [Kafdrop](https://github.com/obsidiandynamics/kafdrop). It can be easily installed into the `amq-streams` project:
+
+```
+$ oc new-app obsidiandynamics/kafdrop -e "KAFKA_BROKERCONNECT=my-cluster-kafka-bootstrap:9092" -e SERVER_SERVLET_CONTEXTPATH="/" -e JVM_OPTS="-Xms32M -Xmx512M"
+$ oc expose dc/kafdrop --port=9000
+$ oc expose svc kafdrop
+```
+
+For the lovers of the CLI: listing existing topics on cluster:
 
 ```
 oc exec -n amq-streams -it my-cluster-kafka-0 -- /opt/kafka/bin/kafka-topics.sh \
