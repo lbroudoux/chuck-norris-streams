@@ -6,10 +6,13 @@ metadata:
   name: chuck-norris-streams-filter-quarkus
 spec:
   replicas: 1
+  selector:
+    matchLabels:
+      app: chuck-norris-filter-quarkus
   template:
     metadata:
       labels:
-        app: chuck-norris-streams-filter-quarkus
+        app: chuck-norris-filter-quarkus
     spec:
       containers:
       - name: chuck-norris-filter

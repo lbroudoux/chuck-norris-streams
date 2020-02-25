@@ -22,6 +22,8 @@ public class JsonPojoSerializer<T> implements Serializer<T> {
             return null;
 
         try {
+            System.err.println("Serializing " + data.toString() + " for " + topic);
+            System.err.println("Got: " + new String(OBJECT_MAPPER.writeValueAsBytes(data)));
             return OBJECT_MAPPER.writeValueAsBytes(data);
         } catch (Exception e) {
             throw new SerializationException("Error serializing JSON message", e);

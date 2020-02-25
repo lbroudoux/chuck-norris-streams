@@ -53,6 +53,8 @@ First component is a simple Mysql database. For that we'll use the preconfigured
 oc new-app --name=mysqldebezium debezium/example-mysql:0.8 -l app=rental-service -n chuck-movie-rental
 ```
 
+> For OpenShift 4.3 setup, we've tried upgrading the database: `oc new-app --name=mysqldebezium debezium/example-mysql:1.0 -e MYSQL_USER=chuck -e MYSQL_PASSWORD=password -e MYSQL_ROOT_PASSWORD=password -l app=rental-service -n chuck-movie-rental`
+
 We'll also have to set specific credentials for the database access.
 
 ```
@@ -166,29 +168,29 @@ Depending on the initilaization sequence of components, it is possible the `chuc
 
 You may want to use this following SQL snippets for that :
 ```
-update movie set main_actor='Jessica Lange ' where id =1;
-update movie set main_actor='Chuck Norris ' where id =2;
-update movie set main_actor='Anthony Hopkins ' where id =3;
-update movie set main_actor='Chuck Norris ' where id =4;
-update movie set main_actor='Chuck Norris ' where id =5;
+update movie set main_actor='Jessica Lange ' where id=1;
+update movie set main_actor='Chuck Norris ' where id=2;
+update movie set main_actor='Anthony Hopkins ' where id=3;
+update movie set main_actor='Chuck Norris ' where id=4;
+update movie set main_actor='Chuck Norris ' where id=5;
 update movie set main_actor='Roger Miller ' where id =6;
-update movie set main_actor='Charles Chaplin ' where id =7;
-update movie set main_actor='Chuck Norris ' where id =8;
-update movie set main_actor='James Stewart ' where id =9;
+update movie set main_actor='Charles Chaplin ' where id=7;
+update movie set main_actor='Chuck Norris ' where id=8;
+update movie set main_actor='James Stewart ' where id=9;
 
 update customer set last_name='pham ' where id =1;
 update customer set last_name='broudoux ' where id =2;
 
-update movie set main_actor='Jessica Lange' where id =1;
-update movie set main_actor='Chuck Norris' where id =2;
-update movie set main_actor='Anthony Hopkins' where id =3;
-update movie set main_actor='Chuck Norris' where id =4;
-update movie set main_actor='Chuck Norris' where id =5;
-update movie set main_actor='Roger Miller' where id =6;
-update movie set main_actor='Charles Chaplin' where id =7;
-update movie set main_actor='Chuck Norris' where id =8;
-update movie set main_actor='James Stewart' where id =9;
+update movie set main_actor='Jessica Lange' where id=1;
+update movie set main_actor='Chuck Norris' where id=2;
+update movie set main_actor='Anthony Hopkins' where id=3;
+update movie set main_actor='Chuck Norris' where id=4;
+update movie set main_actor='Chuck Norris' where id=5;
+update movie set main_actor='Roger Miller' where id=6;
+update movie set main_actor='Charles Chaplin' where id=7;
+update movie set main_actor='Chuck Norris' where id=8;
+update movie set main_actor='James Stewart' where id=9;
 
-update customer set last_name='pham' where id =1;
-update customer set last_name='broudoux' where id =2;
+update customer set last_name='pham' where id=1;
+update customer set last_name='broudoux' where id=2;
 ```

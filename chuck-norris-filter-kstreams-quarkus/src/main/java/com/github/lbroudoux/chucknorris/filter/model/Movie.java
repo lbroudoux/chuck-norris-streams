@@ -9,11 +9,16 @@ import io.quarkus.runtime.annotations.RegisterForReflection;
 @RegisterForReflection
 public class Movie {
 
+    @JsonProperty("_eventType")
     private final EventType eventType;
 
+    @JsonProperty("id")
     private final Integer id;
+    @JsonProperty("title")
     private final String title;
+    @JsonProperty("year")
     private final Integer year;
+    @JsonProperty("main_actor")
     private final String mainActor;
 
     @JsonCreator

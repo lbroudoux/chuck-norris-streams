@@ -35,6 +35,7 @@ public class JsonHybridDeserializer<T> implements Deserializer<T> {
 
         T data;
 
+        System.err.println("Looking for deserializing: " + new String(bytes));
         //step1: try to directly deserialize expected class
         try {
             data = OBJECT_MAPPER.readValue(bytes, clazz);
@@ -42,6 +43,7 @@ public class JsonHybridDeserializer<T> implements Deserializer<T> {
             //System.out.println(e1);
             //step2: try to deserialize from DBZ json event
             try {
+                System.err.println("Checking if it's a Debezium event...");
                 Map temp = (Map) OBJECT_MAPPER.readValue(new String(bytes), Map.class)
                         .get(DBZ_CDC_EVENT_PAYLOAD_FIELD);
                 if (temp == null) {
@@ -53,6 +55,7 @@ public class JsonHybridDeserializer<T> implements Deserializer<T> {
                 //data = OBJECT_MAPPER.readValue(OBJECT_MAPPER.writeValueAsBytes(temp), clazz);
 
                 if (isKey) {
+                    System.err.println("Might be a Debezium message for key...");
                     // The key is decoded directly into Integer => this is an ugly code, but should work
                     data = OBJECT_MAPPER.readValue(OBJECT_MAPPER.writeValueAsBytes(temp.get("id")), clazz);
                     if (data != null) {
@@ -61,6 +64,7 @@ public class JsonHybridDeserializer<T> implements Deserializer<T> {
                         System.err.println("Create a null key object...");
                     }
                 } else {
+                    System.err.println("Might be a Debezium message for payload...");
                     data = OBJECT_MAPPER.readValue(OBJECT_MAPPER.writeValueAsBytes(temp.get(DBZ_CDC_EVENT_AFTER_FIELD)), clazz);
                     if (data != null) {
                         System.err.println("Just create a new: " + data.toString());
@@ -68,7 +72,7 @@ public class JsonHybridDeserializer<T> implements Deserializer<T> {
                         System.err.println("Create a null object...");
                     }
                 }
-            } catch(IOException e2) {
+            } catch (IOException e2) {
                 throw new SerializationException(e2);
             }
         }

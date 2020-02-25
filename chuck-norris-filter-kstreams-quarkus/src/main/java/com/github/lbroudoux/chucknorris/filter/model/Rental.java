@@ -11,12 +11,18 @@ import java.util.Date;
 @RegisterForReflection
 public class Rental {
 
+    @JsonProperty("_eventType")
     private final EventType eventType;
 
+    @JsonProperty("id")
     private final Integer id;
+    @JsonProperty("customer_id")
     private final Integer customerId;
+    @JsonProperty("movie_id")
     private final Integer movieId;
+    @JsonProperty("start_date")
     private final Date startDate;
+    @JsonProperty("rental_duration")
     private final Integer rentalDuration;
 
     @JsonCreator

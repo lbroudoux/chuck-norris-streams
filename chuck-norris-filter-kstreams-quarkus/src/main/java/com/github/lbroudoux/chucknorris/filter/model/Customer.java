@@ -9,11 +9,16 @@ import io.quarkus.runtime.annotations.RegisterForReflection;
 @RegisterForReflection
 public class Customer {
 
+    @JsonProperty("_eventType")
     private final EventType eventType;
 
+    @JsonProperty("id")
     private final Integer id;
+    @JsonProperty("first_name")
     private final String firstname;
+    @JsonProperty("last_name")
     private final String lastname;
+    @JsonProperty("twitter_handle")
     private final String twitterHandle;
 
     @JsonCreator
