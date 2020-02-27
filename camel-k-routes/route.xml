@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<routes id="generic-routes" xmlns="http://camel.apache.org/schema/spring" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="       http://camel.apache.org/schema/spring https://camel.apache.org/schema/spring/camel-spring-3.0.0.xsd">
+  <route id="kafkaListener">
+    <from id="kafkaListenerFrom" uri="kafka:rental-chuck-norris?brokers=my-cluster-kafka-bootstrap.amq-streams.svc.cluster.local:9092&amp;groupId=camelk" />
+    <convertBodyTo type="java.lang.String" />
+    <log message="${body}" />
+    <removeHeaders pattern="*" />
+    <setHeader name="CamelHttpMethod">
+      <constant>GET</constant>
+    </setHeader>
+    <setHeader name="user-key">
+      <constant>CHUCK_NORRIS_FACT_API_KEY</constant>
+    </setHeader>
+    <to uri="http://chuck-norris-facts-apicast-chuck-movie-rental.apps.cluster-paris-2bd4.paris-2bd4.example.opentlc.com/camel/restsvc/fact" />
+    <convertBodyTo type="java.lang.String" />
+    <unmarshal>
+      <json library="Jackson" />
+    </unmarshal>
+    <setBody>
+      <simple>Le saviez vous? ${body[fact]}</simple>
+      <!-- <simple>Don't you know? ${body[fact]}</simple> -->
+    </setBody>
+    <setHeader name="CamelTelegramChatId">
+      <constant>TELEGRAM_CHAT_ID</constant>
+    </setHeader>
+    <to uri="telegram:bots?authorizationToken=TELEGRAM_AUTHORIZATION_TOKEN" />
+  </route>
+</routes>

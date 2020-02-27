@@ -154,7 +154,27 @@ We'll setup a new component called `chuck-norris-filter-kstreams` that will list
 
 ### Deploy Fuse Online integration routes
 
-All detailed instructions given into [fuse-online](./fuse-online.md).
+Fuse Online can be used to simply declare and deploy integration routes that will:
+* Pick the `rental-chuck-norris` events in Kafka and create a new contact in Salesforce CRM,
+* Pick the `rental-chuck-norris` events in Kafka, invoke the `chuck-norris-facts-api` API and post a message in Telegram chat bot channel.
+
+All detailed instructions are given into [fuse-online](./fuse-online.md).
+
+### [Optional] Deploy Camel-K integration route
+
+Optionnaly, and because it's a more technical use-case, you may want to implement the integration route from Kafka to Telegram using [Camel-K](https://camel.apache.org/camel-k/latest/index.html).
+
+> This setup has only been tested onto an OpenShift 4.3 cluster.
+
+All detailed instructions are given into [camel-k](./camel-k.md)
+
+### [Optional] Deploy 3scale API Manamgenet gateway
+
+In order to illustrate API Management capabilities, you may want to deploy an 3scale API Gateway in front of the `chuck-norris-facts-api` service. So that you'll be able to secure, audit, control and govern access made to this API.
+
+> This setup has only been tested onto an OpenShift 4.3 cluster.
+
+All detailed instructions are given into [3scale](./3scale.md)
 
 ## Run the demo
 
