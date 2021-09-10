@@ -47,8 +47,9 @@ public class TopologyProducer {
       GlobalKTable<Integer, Customer> usersTableInt = builder.globalTable(config.getCustomersTopic(), Consumed.with(defaultIdSerde, userSerde));
       GlobalKTable<Integer, Movie> moviesTableInt = builder.globalTable(config.getMoviesTopic(), Consumed.with(defaultIdSerde, movieSerde));
 
-      // Create Stream for rental: we are looking at each changes.
+      // Create Stream for rental: we are looking at each changes excepted deletes (rental == null).
       KStream<Integer, Rental> rentalsStream = builder.stream(config.getRentalsTopic(), Consumed.with(defaultIdSerde, rentalSerde))
+              .filter((rentalId, rental) -> rental != null)
               .map((rentalId, rental) -> new KeyValue<>(rental.getMovieId(), rental));
       //rentalsStream.print(Printed.toSysOut());
 

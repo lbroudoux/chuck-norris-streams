@@ -4,6 +4,14 @@ This project uses Quarkus, the Supersonic Subatomic Java Framework.
 
 If you want to learn more about Quarkus, please visit its website: https://quarkus.io/ .
 
+Built with:
+
+```sh
+mvn clean package -Pnative -Dquarkus.native.container-build=true
+docker build -f src/main/docker/Dockerfile.native -t quay.io/lbroudoux/chuck-norris-filter-quarkus:new-latest .
+docker push quay.io/lbroudoux/chuck-norris-filter-quarkus:new-latest 
+```
+
 ## Running the application in dev mode
 
 You can run your application in dev mode that enables live coding using:

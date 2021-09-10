@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: chuck-norris-filter
-        image: quay.io/lbroudoux/chuck-norris-filter-quarkus:latest
+        image: quay.io/lbroudoux/chuck-norris-filter-quarkus:new-latest
         env:
         - name: BOOTSTRAP_SERVERS
           value: my-cluster-kafka-bootstrap.amq-streams.svc.cluster.local:9092
