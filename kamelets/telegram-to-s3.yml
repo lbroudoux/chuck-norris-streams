@@ -1,0 +1,22 @@
+apiVersion: camel.apache.org/v1alpha1
+kind: KameletBinding
+metadata:
+  name: telegram-to-s3
+spec:
+  source:
+    ref:
+      kind: Kamelet
+      apiVersion: camel.apache.org/v1alpha1
+      name: telegram-source
+    properties:
+      authorizationToken: 850651874:AAF7-7maHFsKhaTHZE8YlW0MIsODUbzv1vg
+  sink:
+    ref:
+      kind: Kamelet
+      apiVersion: camel.apache.org/v1alpha1
+      name: aws-s3-sink
+    properties:
+      accessKey: AKIA2HTUU7RLRCXVVE4X
+      secretKey: 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
+      bucketNameOrArn: lbr-thanos-object-storage
+      region: eu-west-3

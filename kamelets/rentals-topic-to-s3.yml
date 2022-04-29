@@ -1,0 +1,27 @@
+apiVersion: camel.apache.org/v1alpha1
+kind: KameletBinding
+metadata:
+  name: rentals-topic-to-s3
+spec:
+  source:
+    ref:
+      kind: Kamelet
+      apiVersion: camel.apache.org/v1alpha1
+      name: kafka-source
+    properties:
+      bootstrapServers: my-cluster-kafka-bootstrap.amq-streams.svc.cluster.local:9094
+      topic: rental-chuck-norris
+      user: kamelet-user
+      password: V69lNxaQz3sP
+      securityProtocol: PLAINTEXT
+  sink:
+    ref:
+      kind: Kamelet
+      apiVersion: camel.apache.org/v1alpha1
+      name: aws-s3-sink
+    properties:
+      accessKey: AKIA2HTUU7RLRCXVVE4X
+      secretKey: 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
+      bucketNameOrArn: lbr-thanos-object-storage
+      region: eu-west-3
+      

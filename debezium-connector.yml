@@ -17,4 +17,4 @@ spec:
     database.whitelist: inventory
     database.history.kafka.bootstrap.servers: my-cluster-kafka-bootstrap.amq-streams.svc.cluster.local:9092
     database.history.kafka.topic: schema-changes.inventory
-    snapshot.mode: schema_only_recovery
+    #snapshot.mode: schema_only_recovery

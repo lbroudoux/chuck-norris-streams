@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<routes id="generic-routes" xmlns="http://camel.apache.org/schema/spring" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="       http://camel.apache.org/schema/spring https://camel.apache.org/schema/spring/camel-spring-3.0.0.xsd">
+  <route id="test">
+    <from uri="telegram:bots?authorizationToken=850651874:AAF7-7maHFsKhaTHZE8YlW0MIsODUbzv1vg" />
+    <log message="${body}" />
+    <setBody>
+      <constant>Hello, it's me: Chuck Norris</constant>
+    </setBody>
+    <to uri="telegram:bots?authorizationToken=850651874:AAF7-7maHFsKhaTHZE8YlW0MIsODUbzv1vg" />
+  </route>
+</routes>

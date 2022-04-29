@@ -57,6 +57,8 @@ oc import-image debezium-connect-source:1.3.0 -n chuck-movie-rental
 oc start-build debezium-connect --from-dir=. --follow -n chuck-movie-rental
 ```
 
+> You may need to cleanup the tags in initialized `debezium-connect-source` image stream in order to force refresh and activation of newly created secret.
+
 ### Declare the Debezium Connector within pod
 
 #### MySQL version
@@ -126,7 +128,7 @@ $ oc exec -n amq-streams -it my-cluster-kafka-0 -- /opt/kafka/bin/kafka-topics.s
     --list
 ```
 
-Checking the differents topics content:
+Checking the different topics content:
 
 ```
 $ oc exec -n amq-streams -it my-cluster-kafka-0 -- /opt/kafka/bin/kafka-console-consumer.sh \
