@@ -14,7 +14,7 @@
 	<properties>
 		<camel.version>2.23.1</camel.version>
 		<spring.boot.version>2.1.4.RELEASE</spring.boot.version>
-		<swagger.ui.version>3.22.0</swagger.ui.version>
+		<swagger.ui.version>3.23.11</swagger.ui.version>
 		<swagger.codegen.version>3.0.7</swagger.codegen.version>
 		<fmp.version>4.1.0</fmp.version>
 		<cxf.codegen.plugin.version>3.3.1</cxf.codegen.plugin.version>
